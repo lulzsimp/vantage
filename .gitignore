@@ -1,4 +1,8 @@
 .DS_Store
-*.csv
+/build
+/package
+**.env
+.env.*
+!.env.example
+**.csv
 .venv
-.git
