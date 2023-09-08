@@ -1,17 +1,27 @@
 import pandas as pd
-import plotly.express as px
-import sys
+df = pd.read_csv('comp.csv')
+def ind_get_rec(typ, name):
+  _df = df[df['name'] == name]
+  _df = _df[_df['type'] == typ]
+  return _df.to_dict('records')
 
-df = pd.read_csv("./marks.csv")
-# ops = input("\ncheck || analyze || compare? ")
-# def_ops = ops.split(" ")
-argv = sys.argv
-if argv[1] == "check":
-    reqd = df.loc[((df["type"]==argv[2]) & (df["year"]==int(argv[3])))]
-    print("\n", reqd[["subj","mark"]])
-elif argv[1] == "analyze":
-    reqd = df.loc[((df["type"]==argv[2]) & (df["year"]==int(argv[3])))]
-    print("\n", reqd[["subj", "mark"]],"\n")
-    print(f"avg {reqd['mark'].mean()}\nstd {reqd['mark'].std()}\ncgpa {((reqd['mark'].sum()/240)*100)/9.5}\nmin/max {reqd['mark'].min()}/{reqd['mark'].max()}")
-    if argv[2] == "ae" or argv[2] == "mt": print(reqd["mark"]*1.25)
-    else: print(reqd["mark"]*2.5)
+# compute
+def comp_avg_loss(l, typ):
+  l_avg = 0
+  fin = 0
+  if typ=="pt1": fin = 40
+  else: fin = 80
+  for i in range(len(l)): l_avg+=fin-l[i]
+  return l_avg/len(l)
+
+# compare
+def comp_recs(comp1, comp2, typ):
+  df1 = pd.DataFrame.from_dict(ind_get_rec(typ, comp1))["mark"]
+  df2 = pd.DataFrame.from_dict(ind_get_rec(typ, comp2))["mark"]
+  avl1 = comp_avg_loss(df1, typ)
+  avl2 = comp_avg_loss(df2, typ)
+  return [dict(max=df1.max(), min=df1.min(), std=df1.std(), avg_loss=avl1, avg=df1.mean()),
+          dict(max=df2.max(), min=df2.min(), std=df2.std(), avg_loss=avl2, avg=df2.mean())]
+print(comp_recs("joshua", "harish", "pt1"))
+
+
