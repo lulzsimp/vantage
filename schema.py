@@ -7,15 +7,6 @@ import operator
 from index import ind_get_rec
 df = pd.read_csv('comp.csv')
 
-# @strawberry.enum
-# class Type(Enum):
-#   PT1 = "pt1"
-#   PT2 = "pt2"
-#   MT = "mt"
-#   PB1 = "pb1"
-#   PB2 = "pb2"
-#   AE = "ae"
-
 @strawberry.type
 class Record:
   mark: float
